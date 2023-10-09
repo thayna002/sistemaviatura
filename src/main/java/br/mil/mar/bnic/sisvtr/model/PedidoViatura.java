@@ -1,9 +1,11 @@
 package br.mil.mar.bnic.sisvtr.model;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="form_viaturas_nova", schema = "bnicsc")
-public class Pedidos {
+public class PedidoViatura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +32,7 @@ public class Pedidos {
     private String nomeCompleto;
 
     @Column(name = "telefone")
-    private String telefone; 
+    private Integer telefone; 
 
     @Column(name = "email")
     private String email ; 
@@ -42,7 +44,7 @@ public class Pedidos {
     private String observacoes; 
 
     @Column(name = "passageiros_qnt")
-    private String passageirosQnt; 
+    private Integer passageirosQnt; 
 
     @Column(name = "motorista_esperar")
     private String motoristaEsperar; 
@@ -87,10 +89,10 @@ public class Pedidos {
     private String localPartida; 
 
     @Column(name = "retorno_date")
-    private LocalTime retornoDate; 
+    private LocalDate retornoDate; 
 
     @Column(name = "saida_date")
-    private LocalTime saidaDate; 
+    private LocalDate saidaDate; 
 
     @Column(name = "hodometro_saida")
     private Integer hodometroSaida; 
@@ -99,7 +101,7 @@ public class Pedidos {
     private Integer hodometroRegresso; 
 
     @Column(name = "data_inclusao")
-    private LocalTime dataInclusao; 
+    private LocalDate dataInclusao; 
 
     @Column(name = "om")
     private String om; 
@@ -108,11 +110,11 @@ public class Pedidos {
     private String tipo; 
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "motorista", referencedColumnName = "id", insertable = false, updatable = false)
     private Motoristas motoristas;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "modelo", referencedColumnName = "id", insertable = false, updatable = false)
     private Viaturas viaturas;
 

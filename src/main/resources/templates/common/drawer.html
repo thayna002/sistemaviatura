@@ -1,0 +1,22 @@
+
+<body th:fragment="drawer">
+    <div id="drawer" style="margin-bottom: 60px;" >
+        <v-navigation-drawer app v-model="drawer">
+          <v-bmenu :itens="menus" 
+            :usuario="usuario"
+            :oi="oi"
+            :perfil="perfil"></v-bmenu>
+        </v-navigation-drawer>
+
+        <v-app-bar app dark color="#1867C0">
+          <v-app-bar-nav-icon @click="drawer = !drawer" ></v-app-bar-nav-icon>
+    
+          <v-toolbar-title>SISVIATURA</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn @click="logout" outlined>
+            Sair
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+        </v-app-bar>
+    </div>
+    <v-app id="app" app>

@@ -50,7 +50,7 @@ public class Viaturas {
     @Column(name = "status")
     private String status;
 
-     @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "tipo_id", referencedColumnName = "id", insertable = false, updatable = false)
     private TiposViaturas tiposViaturas;
 
