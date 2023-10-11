@@ -52,7 +52,7 @@ public class Viaturas {
 
     @ManyToOne
     @JoinColumn(name = "tipo_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private TiposViaturas tiposViaturas;
+    private TipoViatura tiposViaturas;
 
     
 }

@@ -1,0 +1,106 @@
+<head th:replace="common/header.html::header"></head>
+<div th:replace="common/drawer.html::drawer"></div>
+<v-main id="app">
+    <v-container fluid> 
+        <v-data-table :headers="dataTableTipo.headers" :items="dataTableTipo.items"
+     class="elevation-1" :footer-props="dataTableTipo.footerProps" :server-items-length="dataTableTipo.totalItens" :items-per-page="dataTableTipo.itemsPerPage"
+    no-data-text="Não ha dados" :page.sync="dataTableTipo.dataTablePage"
+     >
+            <template v-slot:top>
+                <v-toolbar flat>
+                    <v-toolbar-title>Tipos Viatura</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                    <v-text-field dense hide-details v-model="search" label="Pesquisa"></v-text-field>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" dark class="mb-2" @click="novo">
+                        Novo
+                    </v-btn>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.saidadate="{ item }">
+                <span>{{ formatarData(item.saidaDate) }} -- </span>
+              </template>
+            <template v-slot:item.saidaDate="{ item }">
+                <span v-html="formatDate(item.saidaDate)"></span>
+              </template>
+       
+            <template v-slot:item.actions="{ item }">
+                <v-icon small class="ms-3" title="Gerar PDF" @click="imprimir(item)">
+                    mdi-printer
+                </v-icon>
+                <v-icon small class="ms-3" title="Visualizar" @click="visualizar(item)">
+                    mdi-eye
+                </v-icon>
+                <v-icon v-if="item.status !== 'Aprovado'" 
+                    small class="ms-3" title="Editar" @click="editar(item)">
+                    mdi-pencil
+                </v-icon>
+                <v-icon  v-if="item.status !== 'Aprovado'" small class="ms-3" title="Exlcuir" @click="excluir(item)">
+                    mdi-delete
+                </v-icon>
+            </template>
+            <!-- Atributos aglutinados -->
+                <template v-slot:item.viatura="{ item }">
+                  <!-- {{ item.viaturas.modeloViatura }} - {{ item.viaturas.placaViatura }} -->
+                  {{ item.viaturas ? (item.viaturas.modeloViatura + ' ' + item.viaturas.placaViatura) : ' ' }}
+              </template>
+              <template v-slot:item.motorista="{ item }">
+                {{ item.motoristas ? (item.motoristas.graduacaoMotorista + ' ' + item.motoristas.nomeGuerraMotorista) : ' ' }}
+              </template>
+              <template v-slot:item.responsavel="{item}">
+                {{ item.postGraduacao + ' '+ item.nomeGuerra}}
+              </template>
+              <template v-slot:item.saidaDate="{ item }">
+                <span v-html="formatarData(item.saidaDate)"></span>
+            </template>
+            <template v-slot:item.saidaDate="{ item }">
+                <span>{{ formatarData(item.saidaDate) }}</span>
+            </template>
+            
+              
+              
+            
+        </v-data-table>
+        <v-dialog width="900" v-model="novoTipoDialog">
+            <v-card>
+                    <v-card-title>
+                        {{ (modoVisualizacao ? 'Detalhes do Tipo Viatura' : ( modoEdicao ? 'Editar Tipo Viatura' : 'Novo Tipo Viatura'))}}
+                    </v-card-title>
+                <v-form ref="form" lazy-validation>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="3">
+                                <v-text-field dense outlined v-model="novoTipo.tipo" name="tipo" label="Tipo" required
+                                v-mask="'#####'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field> 
+                            </v-col>
+                            <v-col cols="4">
+                                <v-text-field dense outlined  v-model="novoTipo.vlDespFixaH" name="vlDespFixaH" label="Valor Despesa Fixa/H" required
+                                    v-mask="'#.##'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field>   
+                                </v-col>
+
+                            <v-col cols="4">
+                                <v-text-field dense outlined  v-model="novoTipo.vlDespMonKm" name="vlDespMonKm" label="Vl Desp Mon Km" required
+                                v-mask="'#.##'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field> 
+                              </v-col> 
+
+                           </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="novoTipoDialog = false">Fechar</v-btn>
+                        <v-btn v-if="!modoVisualizacao" type="submit" color="primary" @click.prevent="salvar">Salvar</v-btn>
+                    </v-card-actions>
+
+                </v-form>
+            </v-card>
+
+        </v-dialog>
+    </v-container>
+</v-main>
+</v-app>
+<div th:replace="common/footer.html::footer"></div>
+<script src="js/custom/tipo.js"></script>
+</body>
+
+</html>

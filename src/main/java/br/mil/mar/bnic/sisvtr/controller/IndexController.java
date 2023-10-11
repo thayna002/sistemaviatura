@@ -12,5 +12,10 @@ public class IndexController {
         return "pages/pedido";
     }
 
+    @RequestMapping("TFrmTipo")
+    public String tipo() {
+        return "pages/tipo";
+    }
+
     
 }

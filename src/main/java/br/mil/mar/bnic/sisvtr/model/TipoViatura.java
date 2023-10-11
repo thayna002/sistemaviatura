@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "viaturas_tipos", schema = "bnicsc")
-public class TiposViaturas {
+public class TipoViatura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +23,10 @@ public class TiposViaturas {
     private String tipo;
 
     @Column(name = "vl_desp_fixa_h")
-    private float vlDespFixaH; 
+    private Float vlDespFixaH; 
 
     @Column(name = "vl_desp_mon_km")
-    private float vlDespMonKm; 
+    private Float vlDespMonKm; 
 
     
     
