@@ -44,6 +44,9 @@ public class Viaturas {
     @Column(name = "viatura_ident")
     private String viaturaIdent; 
 
+    @Column(name = "viatura_tipo")
+    private String viaturaTipo; 
+
     @Column(name = "tipo_id")
     private Long tipoId;
     

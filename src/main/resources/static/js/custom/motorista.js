@@ -3,24 +3,17 @@ var app = new Vue ({
     el: '#app', 
     vuetify: new Vuetify({}), 
     data: {
-        dataTablePedido: {
+        dataTable: {
             headers: [
-                { text: 'Responsável', value: 'responsavel' },
-                { text: 'Tel/Ramal', value: 'telefone' },
-                { text: 'Local de Partida', value: 'localPartida' },
-                { text: 'Destino', value: 'destino' },
-                // { text: 'Descrição Serviço', value: 'observacoes' },
-                { text: 'Quantidade Passageiros', value: 'passageirosQnt' },
-                { text: 'Motorista Espera', value: 'motoristaEsperar' },
-                { text: 'STATUS', value: 'status' },
-                { text: 'Data Viagem', value: 'saidadate' },
-                { text: 'Motorista', value: 'motorista' },
-                { text: 'Viatura', value: 'viatura' },
+                { text: 'NIP', value: 'nip' },
+                { text: 'Graduação', value: 'graduacaoMotorista' },
+                { text: 'Nome de Guerra', value: 'nomeGuerraMotorista' },
+                { text: 'CNH', value: 'cnhClasse' },
                 { text: 'AÇÕES', value: 'actions' }
             ], 
             items: [], 
             itemsfiltrados: [], 
-            pedidos: {}
+            motorista: {}
             
         },
         search: null ,
@@ -29,10 +22,10 @@ var app = new Vue ({
         ],
         modoEdicao: false, 
         modoVisualizacao: false, 
-        novoPedido: {}, 
+        novoMotorista: {}, 
         pedido: {}, 
         clienteBnic: {},
-        novoPedidoDialog: false, 
+        novoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
             itemsPerPage: 10 // Por exemplo, page = 1 e itemsPerPage = 10
@@ -40,8 +33,8 @@ var app = new Vue ({
           itemsPerPage: [10, 20, 30]
     }, 
     mounted(){
-        this.getPedidos(), 
-        this.getClienteBnic()
+        this.getMotorista() 
+
     }, 
 
     computed: {
@@ -51,50 +44,50 @@ var app = new Vue ({
          
     }, 
     methods: {
-        async getPedidos() {
+        async getMotorista() {
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
-                await axios.get(`pedidoViatura/todosPedidos/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
-                    this.dataTablePedido.totalItens = resp.data.totalElements
-                    this.dataTablePedido.itemsPerPage = resp.data.size
-                    this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
-                    this.pedido = resp.data.content
-                    this.dataTablePedido.items = resp.data.content 
-                    console.log( this.dataTablePedido.items)
-                }).finally(()=> this.dataTablePedido.loading = false)
+                await axios.get(`motoristas/todosMotoristas/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                    this.dataTable.totalItens = resp.data.totalElements
+                    this.dataTable.itemsPerPage = resp.data.size
+                    this.dataTable.dataTablePage = resp.data.pageable.pageNumber +1
+                    this.motorista = resp.data.content
+                    this.dataTable.items = resp.data.content 
+                    console.log( this.dataTable.items)
+                }).finally(()=> this.dataTable.loading = false)
 
 
         },    
-        async getClienteBnic(){
-            await axios.get(`http://10.1.32.86/FATURA/clientesbnic`).then((resp)=>{
-                this.clienteBnic = resp.data; 
-                // console.log(this.cliente)
-            })
+        // async getClienteBnic(){
+        //     await axios.get(`http://10.1.32.86/FATURA/clientesbnic`).then((resp)=>{
+        //         this.clienteBnic = resp.data; 
+        //         // console.log(this.cliente)
+        //     })
 
-        },        
+        // },        
         novo() {
-           this.novoPedido = {}
-            this.novoPedidoDialog = true   
+           this.novoMotorista = {}
+            this.novoDialog = true   
             this.$refs?.form?.resetValidation()
             this.modoEdicao = false
             this.modoVisualizacao = false 
         },
         async salvar() {
-            this.novoPedido.postGraduacao = this.novoPedido.postGraduacao.toUpperCase();
-            this.novoPedido.nomeGuerra = this.novoPedido.nomeGuerra.toUpperCase();
-            this.novoPedido.localPartida = this.novoPedido.localPartida.toUpperCase();
-            this.novoPedido.destino = this.novoPedido.destino.toUpperCase();
-            this.novoPedido.dataInclusao = new Date();
-            this.novoPedido.motoristaEsperar = this.novoPedido.motoristaEsperar.toUpperCase(); 
-            this.novoPedido.status = "Em Análise";
+            this.novoMotorista.postGraduacao = this.novoMotorista.postGraduacao.toUpperCase();
+            this.novoMotorista.nomeGuerra = this.novoMotorista.nomeGuerra.toUpperCase();
+            this.novoMotorista.localPartida = this.novoMotorista.localPartida.toUpperCase();
+            this.novoMotorista.destino = this.novoMotorista.destino.toUpperCase();
+            this.novoMotorista.dataInclusao = new Date();
+            this.novoMotorista.motoristaEsperar = this.novoMotorista.motoristaEsperar.toUpperCase(); 
+            this.novoMotorista.status = "Em Análise";
 
             if (
-                this.novoPedido.postGraduacao === '' ||
-                this.novoPedido.telefone === 0 ||
-                this.novoPedido.email === '' ||
-                this.novoPedido.localPartida === '' ||
-                this.novoPedido.materialTransportar === '' ||
-                this.novoPedido.passageirosQnt === 0
+                this.novoMotorista.postGraduacao === '' ||
+                this.novoMotorista.telefone === 0 ||
+                this.novoMotorista.email === '' ||
+                this.novoMotorista.localPartida === '' ||
+                this.novoMotorista.materialTransportar === '' ||
+                this.novoMotorista.passageirosQnt === 0
             ) {
                 Swal.fire({
                     icon: 'error',
@@ -104,7 +97,7 @@ var app = new Vue ({
             } else {
                 
                     await axios
-                    .post(`pedidoViatura`, this.novoPedido)
+                    .post(`pedidoViatura`, this.novoMotorista)
                     .then(() => {
                         Swal.fire({
                             icon: 'success',
@@ -114,7 +107,7 @@ var app = new Vue ({
                             timer: 3000,
                             position: 'top-end',
                         });
-                        this.novoPedidoDialog = false;
+                        this.novoDialog = false;
                         this.getPedidos();
                     })
                     .catch((error) => {
@@ -128,26 +121,26 @@ var app = new Vue ({
                     });
                 }
                 
-                console.log(this.novoPedido);
+                console.log(this.novoMotorista);
             },     
-        editarPedido(item) {
+        editarMotorista(item) {
             this.modoEdicao = true;
             this.modoVisualizacao = false;
-            this.novoPedidoDialog = true;
-            this.novoPedido = item;
+            this.novoDialog = true;
+            this.novoMotorista = item;
             
 
         },
-        async visualizarPedido(item){
+        async visualizarMotorista(item){
                 this.modoVisualizacao = true;
                 this.modoEdicao = false; 
-                this.novoPedido = structuredClone(item)
-                this.novoPedidoDialog = true;
+                this.novoMotorista = structuredClone(item)
+                this.novoDialog = true;
                 this.activateFormulario = true
                 this.btnLiquidar = false
                 this.titleDialog = "Pedido"
         }, 
-        async excluirPedido(item) {
+        async excluirMotorista(item) {
             Swal.fire({
               title: 'Tem certeza que deseja excluir?',
               text: "Essa ação não poderá ser revertida!",
@@ -174,15 +167,7 @@ var app = new Vue ({
               }
             })
           },
-           formatarData(data) {
-            const dataObj = new Date(data);
-            const dia = String(dataObj.getDate()).padStart(2, '0');
-            const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0
-            const ano = dataObj.getFullYear();
-        
-            return `${dia}/${mes}/${ano}`;
-          }
-      
+     
     }, 
         created(){
 
