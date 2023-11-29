@@ -12,5 +12,21 @@ public class IndexController {
         return "pages/pedido";
     }
 
+    @RequestMapping("TFrmTipo")
+    public String tipo() {
+        return "pages/tipo";
+    }
+
+    @RequestMapping("TFrmPddEmAnalise")
+    public String pedidoAberto() {
+        return "pages/pedidoAberto";
+    }
+
+    @RequestMapping("TfrmMotorista")
+    public String motorista() {
+        return "pages/motorista";
+    }
+
+
     
 }

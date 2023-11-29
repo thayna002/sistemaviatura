@@ -57,10 +57,6 @@
             <template v-slot:item.saidaDate="{ item }">
                 <span>{{ formatarData(item.saidaDate) }}</span>
             </template>
-            
-              
-              
-            
         </v-data-table>
         <v-dialog width="900" v-model="novoPedidoDialog">
             <v-card>
@@ -83,9 +79,21 @@
                             <v-col cols="4">
                                 <v-text-field dense outlined v-model="novoPedido.telefone" name="telefone" label="Telefone/Ramal" required
                                     v-mask="'#####'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field>   
-                                </v-col>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select dense outlined v-model="novoPedido.om" 
+                                    name="om" label="OM"
+                                    :items="clienteBnic"
+                                    item-text="cdAbrvOm"
+                                    item-value="cdAbrvOm"
+                                    :rules="obrigatorio"  
+                                    :disabled="modoVisualizacao"
+                                    required
+                                   >
+                                </v-select>
+                            </v-col>
 
-                            <v-col cols="12">
+                            <v-col cols="6">
                                 <v-text-field dense outlined v-model="novoPedido.email" name="email" label="E-mail" required
                                  class="upper" :rules="obrigatorio" :disabled="modoVisualizacao"></v-text-field>
                               </v-col> 
@@ -126,6 +134,10 @@
                                 <v-textarea dense outlined v-model="novoPedido.observacoes" name="observacoes" label="Descrição" rows="3" row-height="25" shaped :disabled="modoVisualizacao">
                                 </v-textarea>
                            </v-col>
+                           <v-col cols="12">
+                            <v-textarea dense outlined v-model="novoPedido.orientacoes" name="orientacoes" label="Orientaçôes" rows="3" row-height="25" shaped disabled>
+                            </v-textarea>
+                       </v-col>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>

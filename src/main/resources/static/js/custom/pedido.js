@@ -20,7 +20,7 @@ var app = new Vue ({
             ], 
             items: [], 
             itemsfiltrados: [], 
-            pedidos: {}, 
+            pedidos: {}
             
         },
         search: null ,
@@ -31,6 +31,7 @@ var app = new Vue ({
         modoVisualizacao: false, 
         novoPedido: {}, 
         pedido: {}, 
+        clienteBnic: {},
         novoPedidoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
@@ -38,19 +39,21 @@ var app = new Vue ({
           }, 
           itemsPerPage: [10, 20, 30]
     }, 
-        mounted(){
-         this.getPedidos()
-        }, 
+    mounted(){
+        this.getPedidos(), 
+        this.getClienteBnic()
+    }, 
 
-        computed: {
+    computed: {
 
-        }, 
-        watch: {
+    }, 
+    watch: {
          
-        }, methods: {
-            async getPedidos() {
-                let {  page, itemsPerPage} = this.options
-                page = page ? page : 1
+    }, 
+    methods: {
+        async getPedidos() {
+            let {  page, itemsPerPage} = this.options
+            page = page ? page : 1
                 await axios.get(`pedidoViatura/todosPedidos/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size
@@ -62,9 +65,17 @@ var app = new Vue ({
 
 
         },    
+        async getClienteBnic(){
+            await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
+                this.clienteBnic = resp.data; 
+                // console.log(this.cliente)
+            })
+
+        },        
         novo() {
            this.novoPedido = {}
             this.novoPedidoDialog = true   
+            this.$refs?.form?.resetValidation()
             this.modoEdicao = false
             this.modoVisualizacao = false 
         },
@@ -136,7 +147,6 @@ var app = new Vue ({
                 this.btnLiquidar = false
                 this.titleDialog = "Pedido"
         }, 
-
         async excluirPedido(item) {
             Swal.fire({
               title: 'Tem certeza que deseja excluir?',
@@ -164,7 +174,7 @@ var app = new Vue ({
               }
             })
           },
-          formatarData(data) {
+           formatarData(data) {
             const dataObj = new Date(data);
             const dia = String(dataObj.getDate()).padStart(2, '0');
             const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0

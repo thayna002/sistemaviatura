@@ -44,6 +44,9 @@ public class Viaturas {
     @Column(name = "viatura_ident")
     private String viaturaIdent; 
 
+    @Column(name = "viatura_tipo")
+    private String viaturaTipo; 
+
     @Column(name = "tipo_id")
     private Long tipoId;
     
@@ -52,7 +55,7 @@ public class Viaturas {
 
     @ManyToOne
     @JoinColumn(name = "tipo_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private TiposViaturas tiposViaturas;
+    private TipoViatura tiposViaturas;
 
     
 }
