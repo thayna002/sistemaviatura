@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import br.mil.mar.bnic.sisvtr.dto.ClienteDTO;
 import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 import br.mil.mar.bnic.sisvtr.repository.PedidoViaturaRepository;
 import br.mil.mar.bnic.sisvtr.service.PedidoViaturaService;
@@ -58,19 +56,19 @@ public class PedidoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-     @GetMapping("/clienteBnic")
-    public ClienteDTO cliente() {
-        RestTemplate restTemplate = new RestTemplate();
+    //  @GetMapping("/clienteBnic")
+    // public ClienteDTO cliente() {
+    //     RestTemplate restTemplate = new RestTemplate();
         
-        try {
-            ResponseEntity<ClienteDTO> resp = restTemplate.getForEntity("http://viacep.com.br/ws/21020170/json", ClienteDTO.class);
-            return resp.getBody();
-        } catch (Exception e) {
-            // Trate a exceção de forma apropriada (por exemplo, registre-a ou retorne uma mensagem de erro)
-            e.printStackTrace();
-            return null; // Ou retorne um ClienteDTO vazio ou com valores padrão, dependendo do seu caso.
-        }
-    }
+    //     try {
+    //         ResponseEntity<ClienteDTO> resp = restTemplate.getForEntity("http://viacep.com.br/ws/21020170/json", ClienteDTO.class);
+    //         return resp.getBody();
+    //     } catch (Exception e) {
+    //         // Trate a exceção de forma apropriada (por exemplo, registre-a ou retorne uma mensagem de erro)
+    //         e.printStackTrace();
+    //         return null; // Ou retorne um ClienteDTO vazio ou com valores padrão, dependendo do seu caso.
+    //     }
+    // }
 
     
 }

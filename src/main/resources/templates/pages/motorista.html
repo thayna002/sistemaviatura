@@ -1,11 +1,10 @@
 <head th:replace="common/header.html::header"></head>
 <div th:replace="common/drawer.html::drawer"></div>
 <v-main id="app">
-    <v-container fluid> 
-        <v-data-table :headers="dataTable.headers" :items="dataTable.items"
-     class="elevation-1" :footer-props="dataTable.footerProps" :server-items-length="dataTable.totalItens" :items-per-page="dataTable.itemsPerPage"
-    no-data-text="Não ha dados" :page.sync="dataTable.dataTablePage"
-     >
+    <v-container fluid>
+        <v-data-table :headers="dataTable.headers" :items="dataTable.items" class="elevation-1"
+            :footer-props="dataTable.footerProps" :server-items-length="dataTable.totalItens"
+            :items-per-page="dataTable.itemsPerPage" no-data-text="Não ha dados" :page.sync="dataTable.dataTablePage">
             <template v-slot:top>
                 <v-toolbar flat>
                     <v-toolbar-title>Motoristas</v-toolbar-title>
@@ -18,63 +17,68 @@
                     </v-btn>
                 </v-toolbar>
             </template>
-     
 
             <template v-slot:item.actions="{ item }">
-                <v-icon small class="ms-3" title="Visualizar" @click="visualizar(item)">
+                <v-icon small class="ms-3" title="Visualizar" @click="visualizarMotorista(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small class="ms-3" title="Editar" @click="visualizar(item)">
+                <v-icon small class="ms-3" title="Editar" @click="editarMotorista(item)">
                     mdi-pencil
                 </v-icon>
-                <v-icon small class="ms-3" title="Exlcuir" @click="excluir(item)">
+                <v-icon small class="ms-3" title="Exlcuir" @click="excluirMotorista(item)">
                     mdi-delete
                 </v-icon>
-                
+
             </template>
+
+            <template v-slot:item.id="{ item }">
+                {{ formatarNIP(item.nip) }}
+              </template>
+              
             <!-- Atributos aglutinados -->
-             
+
         </v-data-table>
         <v-dialog width="900" v-model="novoDialog">
             <v-card>
-                    <v-card-title>
-                        {{ (modoVisualizacao ? 'Detalhes' : ( modoEdicao ? 'Editar' : 'Novo'))}}
-                    </v-card-title>
+                <v-card-title>
+                    {{ (modoVisualizacao ? 'Detalhes' : ( modoEdicao ? 'Editar' : 'Novo'))}}
+                </v-card-title>
                 <v-form ref="form" lazy-validation>
                     <v-card-text>
                         <v-row>
-                            </v-col>
                             <v-col cols="4">
                                 <v-text-field dense outlined v-model="novoMotorista.nip" name="nip" label="NIP" required
-                                    v-mask="'##.####.##'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field>   
+                                    v-mask="'##.####.##'" :rules="obrigatorio"
+                                    :disabled="modoVisualizacao"></v-text-field>
                             </v-col>
                             <v-col cols="4">
-                                <v-select dense outlined v-model="novoMotorista.graduacaoMotorista" label="Posto Graduação"
-                                    :items="[ 'SO', '1°SG', '2°SG', '3°SG', 'CB', 'MN']" required
-                                    :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
-                            </v-col> 
-                            <v-col cols="4">
-                                <v-text-field dense outlined v-model="novoMotorista.nomeGuerraMotorista" name="nomeGuerraMotorista" label="Nome de Guerra" required
-                                    :rules="obrigatorio" class="upper" :disabled="modoVisualizacao"></v-text-field>
+                                <v-select dense outlined v-model="novoMotorista.graduacaoMotorista"
+                                    label="Posto Graduação" :items="[ 'SO', '1°SG', '2°SG', '3°SG', 'CB', 'MN']"
+                                    required :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
                             </v-col>
-                           
+                            <v-col cols="4">
+                                <v-text-field dense outlined v-model="novoMotorista.nomeGuerraMotorista"
+                                    name="nomeGuerraMotorista" label="Nome de Guerra" required :rules="obrigatorio"
+                                    class="upper" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
                             <v-col cols="9">
-                                <v-text-field dense outlined v-model="novoMotorista.nomeCompletoMotorista" name="nomeCompletoMotorista" label="Nome Completo" required
-                                    :rules="obrigatorio" class="upper" :disabled="modoVisualizacao"></v-text-field>
+                                <v-text-field dense outlined v-model="novoMotorista.nomeCompletoMotorista"
+                                    name="nomeCompletoMotorista" label="Nome Completo" required :rules="obrigatorio"
+                                    class="upper" :disabled="modoVisualizacao"></v-text-field>
                             </v-col>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-select dense outlined v-model="novoMotorista.cnhClasse" label="CNH"
-                                :items="['A', 'B', 'C', 'D', 'E']" multiple
-                                :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
-                        </v-col> 
 
-                       
+                            </v-col>
+                            <v-col cols="3">
+                                <v-select dense outlined v-model="novoMotorista.cnhClasse" label="CNH"
+                                    :items="['A', 'B', 'C', 'D', 'E']" multiple :rules="obrigatorio"
+                                    :disabled="modoVisualizacao"></v-select>
+                            </v-col>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="primary" @click="novoDialog = false">Fechar</v-btn>
-                        <v-btn v-if="!modoVisualizacao" type="submit" color="primary" @click.prevent="salvar">Salvar</v-btn>
+                        <v-btn v-if="!modoVisualizacao" type="submit" color="primary"
+                            @click.prevent="salvar">Salvar</v-btn>
                     </v-card-actions>
 
                 </v-form>

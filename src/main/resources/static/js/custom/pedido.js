@@ -66,7 +66,7 @@ var app = new Vue ({
 
         },    
         async getClienteBnic(){
-            await axios.get(`http://10.1.32.86/FATURA/clientesbnic`).then((resp)=>{
+            await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
                 this.clienteBnic = resp.data; 
                 // console.log(this.cliente)
             })

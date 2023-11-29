@@ -22,4 +22,8 @@ public class MotoristaService {
     public Page<Motoristas> findAll(Pageable pageable) {
        return repository.findAll(pageable);
     }
+
+    public void deleteById(Long id){
+        repository.deleteById(id);
+    }
 }
