@@ -48,6 +48,12 @@ var app = new Vue ({
 
     }, 
     watch: {
+        'dataTablePedido.optios': {
+            handler() {
+                this.searchPedidos()
+            }
+        }, 
+        deep: true
          
     }, 
     methods: {

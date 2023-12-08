@@ -30,7 +30,6 @@
                 </v-icon>
 
             </template>
-
             <template v-slot:item.id="{ item }">
                 {{ formatarNIP(item.nip) }}
               </template>
@@ -52,9 +51,15 @@
                                     :disabled="modoVisualizacao"></v-text-field>
                             </v-col>
                             <v-col cols="4">
-                                <v-select dense outlined v-model="novoMotorista.graduacaoMotorista"
-                                    label="Posto Graduação" :items="[ 'SO', '1°SG', '2°SG', '3°SG', 'CB', 'MN']"
-                                    required :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
+                                
+                                <v-select dense outlined 
+                                    v-model="novoMotorista.graduacaoMotorista"
+                                    value="novoMotorista.graduacaoMotorista"
+                                    label="Graduação" 
+                                    :items="['SO', '1°SG', '2°SG', '3ºSG', 'CB', 'MN']" 
+                                    :rules="obrigatorio" 
+                                    :disabled="modoVisualizacao"
+                                    required ></v-select>
                             </v-col>
                             <v-col cols="4">
                                 <v-text-field dense outlined v-model="novoMotorista.nomeGuerraMotorista"

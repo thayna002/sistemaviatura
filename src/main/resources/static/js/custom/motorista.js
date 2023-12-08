@@ -125,7 +125,7 @@ var app = new Vue({
             this.novoDialog = true;
             this.$refs?.form?.resetValidation()
             this.novoMotorista = JSON.parse(JSON.stringify(item));
-
+            this.novoMotorista.graduacaoMotorista = item.graduacaoMotorista.trim()
             this.novoMotorista.cnhClasse = item.cnhClasse.trim().split(" ")
          },
         async visualizarMotorista(item) {

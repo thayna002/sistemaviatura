@@ -3,7 +3,10 @@
 <v-main id="app">
     <v-container fluid> 
         <v-data-table :headers="dataTablePedido.headers" :items="dataTablePedido.items"
-     class="elevation-1" :footer-props="dataTablePedido.footerProps" :server-items-length="dataTablePedido.totalItens" :items-per-page="dataTablePedido.itemsPerPage"
+     class="elevation-1" :footer-props="dataTablePedido.footerProps" 
+     :server-items-length="dataTablePedido.totalItens" 
+     :items-per-page="dataTablePedido.itemsPerPage"
+     :options.sync="dataTablePedido.options"
     no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
      >
             <template v-slot:top>
