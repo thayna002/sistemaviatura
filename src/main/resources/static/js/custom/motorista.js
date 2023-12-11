@@ -43,12 +43,18 @@ var app = new Vue({
 
     },
     watch: {
+        options:{
+            handler(){
+                this.pesquisa()
+            }, 
+            deep: true
+        }
 
     },
     methods: {
         async getMotorista() {
-            let { page, itemsPerPage } = this.options
-            page = page ? page : 1
+            let { page, itemsPerPage } = this.options;
+            page = page ? page : 1;
             await axios.get(`motoristas/todosMotoristas/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
                 this.dataTable.totalItens = resp.data.totalElements
                 this.dataTable.itemsPerPage = resp.data.size
@@ -60,6 +66,11 @@ var app = new Vue({
 
 
         },
+        pesquisa(item) {
+            this.loading = true
+            this.getMotorista(item)
+          },
+      
         novo() {
             this.novoMotorista = {}
             this.novoDialog = true
@@ -136,6 +147,7 @@ var app = new Vue({
             this.activateFormulario = true
             this.btnLiquidar = false
             this.titleDialog = "Motorista"
+            this.novoMotorista.graduacaoMotorista = item.graduacaoMotorista.trim()
         },
         async excluirMotorista(item) {
             Swal.fire({
@@ -174,10 +186,10 @@ var app = new Vue({
             const nipNumerico = nip.toString().replace(/\D/g, '');
             // Formatar o NIP como XX.XXXX.XX
             return nipNumerico.replace(/(\d{2})(\d{4})(\d{2})/, '$1.$2.$3');
-          }
-        
+          },
 
     },
+
     created() {
 
     }

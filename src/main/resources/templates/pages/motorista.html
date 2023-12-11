@@ -2,8 +2,8 @@
 <div th:replace="common/drawer.html::drawer"></div>
 <v-main id="app">
     <v-container fluid>
-        <v-data-table :headers="dataTable.headers" :items="dataTable.items" class="elevation-1"
-            :footer-props="dataTable.footerProps" :server-items-length="dataTable.totalItens"
+        <v-data-table :headers="dataTable.headers" :items="dataTable.items" class="elevation-1" sort-by="id" :options.sync="options"
+            :footer-props="dataTable.footerProps" :server-items-length="dataTable.totalItens" 
             :items-per-page="dataTable.itemsPerPage" no-data-text="Não ha dados" :page.sync="dataTable.dataTablePage">
             <template v-slot:top>
                 <v-toolbar flat>

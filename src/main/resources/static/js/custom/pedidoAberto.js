@@ -152,6 +152,7 @@ var app = new Vue ({
                 this.modoVisualizacao = false;
                 this.novoPedidoDialog = true;
                 this.novoPedido = item;
+            
 
             },
             async visualizarPedido(item){
