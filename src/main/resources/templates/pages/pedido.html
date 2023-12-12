@@ -6,7 +6,7 @@
      class="elevation-1" :footer-props="dataTablePedido.footerProps" 
      :server-items-length="dataTablePedido.totalItens" 
      :items-per-page="dataTablePedido.itemsPerPage"
-     :options.sync="dataTablePedido.options"
+     :options.sync="options"
     no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
      >
             <template v-slot:top>

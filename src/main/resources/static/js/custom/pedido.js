@@ -48,13 +48,14 @@ var app = new Vue ({
 
     }, 
     watch: {
-        'dataTablePedido.optios': {
-            handler() {
-                this.searchPedidos()
-            }
-        }, 
-        deep: true
-         
+        options:{
+            handler(){
+                this.pesquisa()
+            }, 
+            deep: true
+        }
+
+
     }, 
     methods: {
         async getPedidos() {
@@ -71,6 +72,10 @@ var app = new Vue ({
 
 
         },    
+        pesquisa(item) {
+            this.loading = true
+            this.getPedidos(item)
+          },
         async getClienteBnic(){
             await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
                 this.clienteBnic = resp.data; 
@@ -142,7 +147,6 @@ var app = new Vue ({
             this.novoPedidoDialog = true;
             this.novoPedido = item;
             
-
         },
         async visualizarPedido(item){
                 this.modoVisualizacao = true;
