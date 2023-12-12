@@ -9,7 +9,6 @@ var app = new Vue ({
                 { text: 'Tel/Ramal', value: 'telefone' },
                 { text: 'Local de Partida', value: 'localPartida' },
                 { text: 'Destino', value: 'destino' },
-                // { text: 'Descrição Serviço', value: 'observacoes' },
                 { text: 'Quantidade Passageiros', value: 'passageirosQnt' },
                 { text: 'Motorista Espera', value: 'motoristaEsperar' },
                 { text: 'STATUS', value: 'status' },

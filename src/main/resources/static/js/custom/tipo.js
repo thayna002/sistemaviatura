@@ -37,9 +37,7 @@ var app = new Vue({
         novoTipoDialog: false,
 
     },
-    // async mounted(){
-    //     await this.getTipos()
-    // }, 
+
     computed: {
 
     },
