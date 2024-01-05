@@ -114,6 +114,7 @@ public class PedidoViatura {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "motorista", referencedColumnName = "id", insertable = false, updatable = false)
     private Motoristas motoristas;
 

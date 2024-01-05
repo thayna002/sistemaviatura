@@ -11,5 +11,7 @@ import br.mil.mar.bnic.sisvtr.model.Viaturas;
 @Repository
 public interface ViaturaRepository extends JpaRepository<Viaturas, Long> {
     List<Viaturas> findAll(); 
+
+    
     
 }

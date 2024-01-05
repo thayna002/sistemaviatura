@@ -3,6 +3,7 @@ var app = new Vue ({
     el: '#app', 
     vuetify: new Vuetify({}), 
     data: {
+        relPedido: [],
         dataTablePedido: {
             headers: [
                 { text: 'Responsável', value: 'responsavel' },
@@ -19,8 +20,8 @@ var app = new Vue ({
             ], 
             items: [], 
             itemsfiltrados: [], 
-            pedidos: {}
-            
+            pedidos: {},
+          
         },
         search: null ,
         obrigatorio: [
@@ -36,7 +37,10 @@ var app = new Vue ({
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
             itemsPerPage: 10 // Por exemplo, page = 1 e itemsPerPage = 10
           }, 
-          itemsPerPage: [10, 20, 30]
+        itemsPerPage: [10, 20, 30],
+
+
+        
     }, 
     mounted(){
         this.getPedidos(), 
@@ -89,6 +93,37 @@ var app = new Vue ({
             this.modoEdicao = false
             this.modoVisualizacao = false 
         },
+        async getRelPedido() {
+            await axios({
+                url: `pedidoViatura/pedidoPorStatus`,
+                method: 'GET',
+            }).then((resp) => {
+               
+                this.relPedido = resp.data
+                console.log(JSON.stringify(this.relPedido))
+
+                this.$nextTick(async () => {
+                jsreport.renderAsync({
+                    "template": {
+                        "shortid": "H1iN8J7Oa"
+                    },
+                    data: {
+                        relPedido: this.relPedido
+                    }
+                }).then(resp => {
+                    resp.download(`Relatório de Viagens.pdf`)
+                })
+            });
+                
+            }).catch(() => {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Aviso',
+                    confirmButtonColor: "blue",
+                    text: 'Não há dados no período selecionado!',
+                })
+            });
+         },
         async salvar() {
             this.novoPedido.postGraduacao = this.novoPedido.postGraduacao.toUpperCase();
             this.novoPedido.nomeGuerra = this.novoPedido.nomeGuerra.toUpperCase();

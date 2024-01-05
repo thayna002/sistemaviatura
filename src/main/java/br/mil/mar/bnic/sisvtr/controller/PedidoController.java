@@ -2,6 +2,8 @@ package br.mil.mar.bnic.sisvtr.controller;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.mil.mar.bnic.sisvtr.dto.InfoPedidoViaturaDTO;
 import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 import br.mil.mar.bnic.sisvtr.repository.PedidoViaturaRepository;
 import br.mil.mar.bnic.sisvtr.service.PedidoViaturaService;
@@ -56,19 +59,8 @@ public class PedidoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //  @GetMapping("/clienteBnic")
-    // public ClienteDTO cliente() {
-    //     RestTemplate restTemplate = new RestTemplate();
-        
-    //     try {
-    //         ResponseEntity<ClienteDTO> resp = restTemplate.getForEntity("http://viacep.com.br/ws/21020170/json", ClienteDTO.class);
-    //         return resp.getBody();
-    //     } catch (Exception e) {
-    //         // Trate a exceção de forma apropriada (por exemplo, registre-a ou retorne uma mensagem de erro)
-    //         e.printStackTrace();
-    //         return null; // Ou retorne um ClienteDTO vazio ou com valores padrão, dependendo do seu caso.
-    //     }
-    // }
-
-    
+    @GetMapping("pedidoPorStatus")
+    public ResponseEntity<List<InfoPedidoViaturaDTO>> getPedidosPorStatus(){
+        return ResponseEntity.ok(service.pedidosPorStatus());
+    }   
 }
