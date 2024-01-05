@@ -12,14 +12,13 @@ import br.mil.mar.bnic.sisvtr.dto.QtdPedidoViaturaDTO;
 import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 
 @Repository
-public interface PedidoViaturaRepository extends JpaRepository<PedidoViatura, Long>{
+public interface PedidoViaturaRepository extends JpaRepository<PedidoViatura, Long> {
 
     Page<PedidoViatura> findAll(Pageable pageable);
 
     Page<PedidoViatura> findByStatus(String status, Pageable pageable);
+   
+    @Query(value = "SELECT new br.mil.mar.bnic.sisvtr.dto.QtdPedidoViaturaDTO(v.status, COUNT(v)) FROM PedidoViatura v where v.centralizado= :centralizado and (v.status='Aprovado' or v.status='Cancelado') GROUP BY v.status")
+    List<QtdPedidoViaturaDTO> pedidosPorStatus(String centralizado);
 
-    @Query(value = "SELECT new br.mil.mar.bnic.sisvtr.dto.QtdPedidoViaturaDTO(v.status, COUNT(v)) FROM PedidoViatura v GROUP BY v.status")
-    List<QtdPedidoViaturaDTO> pedidosPorStatus();
-        
-    
 }
