@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import lombok.Data;
 
 @Data
@@ -88,6 +91,7 @@ public class PedidoViatura {
     @Column(name = "local_de_partida")
     private String localPartida; 
 
+        
     @Column(name = "retorno_date")
     private LocalDate retornoDate; 
 
@@ -115,6 +119,7 @@ public class PedidoViatura {
     private Motoristas motoristas;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "modelo", referencedColumnName = "id", insertable = false, updatable = false)
     private Viaturas viaturas;
 

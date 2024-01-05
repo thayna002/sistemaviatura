@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class IndexController {
 
+    
     @RequestMapping("TFrmPedido")
     public String pedido() {
         return "pages/pedido";
@@ -25,6 +26,11 @@ public class IndexController {
     @RequestMapping("TfrmMotorista")
     public String motorista() {
         return "pages/motorista";
+    }
+
+    @RequestMapping("TfrmPedidoDoDia")
+    public String pedidododia() {
+        return "pages/pedidoDodia";
     }
 
 

@@ -1,0 +1,178 @@
+<head th:replace="common/header.html::header"></head>
+<div th:replace="common/drawer.html::drawer"></div>
+<v-main id="app">
+    <v-container fluid> 
+        <v-data-table :headers="dataTablePedido.headers" :items="dataTablePedido.items"
+     class="elevation-1" :footer-props="dataTablePedido.footerProps" :server-items-length="dataTablePedido.totalItens" :items-per-page="dataTablePedido.itemsPerPage"
+    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
+     >
+            <template v-slot:top>
+                <v-toolbar flat>
+                    <v-toolbar-title>Pedido do Dia</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                    <v-text-field dense hide-details v-model="search" label="Pesquisa"></v-text-field>
+                    <v-spacer></v-spacer>
+                   
+                </v-toolbar>
+            </template>
+            <template v-slot:item.id="{ item }">
+                {{ item.id }}
+            </template>
+            
+
+            <template v-slot:item.actions="{ item }">
+            
+                <v-icon  
+                    small class="ms-3" title="Editar" @click="editarPedido(item)">
+                    mdi-pencil
+                </v-icon>
+                <v-icon  small class="ms-3" title="Exlcuir" @click="excluirPedido(item)">
+                    mdi-delete
+                </v-icon>
+            </template>
+            <template v-slot:item.gerarpdf="{ item }">
+                <v-icon small class="ms-3" title="Gerar PDF" @click="imprimir(item)">
+                    mdi-printer
+                </v-icon>
+                
+            </template>
+            
+            <!-- Atributos aglutinados -->
+                <template v-slot:item.viatura="{ item }">
+                  <!-- {{ item.viaturas.modeloViatura }} - {{ item.viaturas.placaViatura }} -->
+                  {{ item.viaturas ? (item.viaturas.viaturaIdent + ' - ' + item.viaturas.marcaViatura + ' ' + item.viaturas.modeloViatura + ' / ' + item.viaturas.placaViatura) : ' ' }}
+              </template>
+              <template v-slot:item.motorista="{ item }">
+                {{ item.motoristas ?  ( '  Nip: ' +  (formatarNIP(item.motoristas.nip)) +'  |   ' + ' Grad:'+ item.motoristas.graduacaoMotorista +'      ' + ' Nome:' + item.motoristas.nomeGuerraMotorista) : ' '  }}
+              </template>
+              <template v-slot:item.responsavel="{item}">
+                {{ item.postGraduacao + ' '+ item.nomeGuerra}}
+              </template>
+              <template v-slot:item.saidaDate="{ item }">
+                <span v-html="formatarData(item.saidaDate)"></span>
+             </template>
+              <template v-slot:item.saidaDate="{ item }">
+                <span>{{ formatarData(item.saidaDate) }}</span>
+              </template>
+
+              <template v-slot:item.retornoDate="{ item }">
+                <span v-html="formatarData(item.retornoDate)"></span>
+             </template>
+              <template v-slot:item.retornoDate="{ item }">
+                <span>{{item.retornoDate ? (formatarData(item.retornoDate)) : ' ' }} </span>
+              </template>
+              <template v-slot:item.datainclusao="{ item }">
+                <span v-html="formatarData(item.dataInclusao)"></span>
+             </template>
+              <template v-slot:item.datainclusao="{ item }">
+                <span>{{ formatarData(item.dataInclusao) }}</span>
+              </template>
+
+              <template v-slot:item.saidaHora="{ item }">
+                {{ item.saidaHora }}
+                </template>
+            
+            <template v-slot:item.retornoHora="{ item }">
+            {{ item.retornoHora }}
+            </template>
+        </v-data-table>
+        <v-dialog width="900" v-model="novoPedidoDialog">
+            <v-card>
+                    <v-card-title>
+                        {{ (modoVisualizacao ? 'Detalhes do Pedido Viatura' : ( modoEdicao ? 'Editar Pedido Viatura' : 'Novo Pedido Viatura'))}}
+                    </v-card-title>
+                <v-form ref="form" lazy-validation>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-select dense outlined v-model="novoPedido.postGraduacao" label="Posto Graduação"
+                                    :items="['CMG', 'CF', 'CC', 'CT', '2° TEN', '1° TEN', 'GM', 'SO', '1°SG', '2°SG', '3°SG', 'CB', 'MN']" required
+                                    :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
+                            </v-col> 
+
+                            <v-col cols="4">
+                                <v-text-field dense outlined v-model="novoPedido.nomeGuerra" name="nomeGuerra" label="Nome de Guerra" required
+                                    :rules="obrigatorio" class="upper" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-text-field dense outlined v-model="novoPedido.telefone" name="telefone" label="Telefone/Ramal" required
+                                    v-mask="'#####'" :rules="obrigatorio" :disabled="modoVisualizacao" ></v-text-field>   
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select dense outlined v-model="novoPedido.om" 
+                                    name="om" label="OM"
+                                    :items="clienteBnic"
+                                    item-text="cdAbrvOm"
+                                    item-value="cdAbrvOm"
+                                    :rules="obrigatorio"  
+                                    :disabled="modoVisualizacao"
+                                    required
+                                   >
+                                </v-select>
+                            </v-col>
+
+                            <v-col cols="6">
+                                <v-text-field dense outlined v-model="novoPedido.email" name="email" label="E-mail" required
+                                 class="upper" :rules="obrigatorio" :disabled="modoVisualizacao"></v-text-field>
+                              </v-col> 
+
+                              <v-col cols="6">
+                                <v-text-field dense outlined v-model="novoPedido.localPartida" name="localPartida" label="Local de Ṕartida" required
+                                :rules="obrigatorio" class="upper" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field dense outlined v-model="novoPedido.destino" name="destino" label="Destino" required
+                                class="upper" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+
+                               
+                            <v-col cols="4">
+                                <v-select dense outlined v-model="novoPedido.materialTransportar" name="materialTransportar" label="Transporte de Material"
+                                    :items="['Sim', 'Não']" required
+                                    :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
+                            </v-col> 
+
+                           <v-col cols="4">
+                                <v-select dense outlined v-model="novoPedido.motoristaEsperar" name="motoristaEsperar" label="Motorista aguarda no Local "
+                                    :items="['Sim', 'Não']" required
+                                    :rules="obrigatorio" :disabled="modoVisualizacao"></v-select>
+                            </v-col>  
+                            <v-col cols="4">
+                                <v-text-field dense outlined v-model="novoPedido.passageirosQnt" name="passageirosQnt" label="Numero de Passageiros" :rules="obrigatorio" required
+                                    v-mask="'#####'" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-textarea dense outlined v-model="novoPedido.observacoes" name="observacoes" label="Descrição" rows="3" row-height="25" shaped :disabled="modoVisualizacao">
+                                </v-textarea>
+                           </v-col>
+                            <v-col cols="6">
+                                <v-text-field dense outlined v-model="novoPedido.saidaDate" name="saidaDate" label="Data de Viagem" required type="date" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field dense outlined v-model="novoPedido.saidaHora" name="saidaHora" label="Hora" required type="time" :disabled="modoVisualizacao"></v-text-field>
+                            </v-col>
+                          
+                           <v-col cols="12">
+                            <v-textarea dense outlined v-model="novoPedido.orientacoes" name="orientacoes" label="Orientaçôes" rows="3" row-height="25" shaped disabled>
+                            </v-textarea>
+                       </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="novoPedidoDialog = false">Fechar</v-btn>
+                        <v-btn v-if="!modoVisualizacao" type="submit" color="primary" @click.prevent="salvar">Salvar</v-btn>
+                    </v-card-actions>
+
+                </v-form>
+            </v-card>
+
+        </v-dialog>
+    </v-container>
+</v-main>
+</v-app>
+<div th:replace="common/footer.html::footer"></div>
+<script src="js/custom/pedidoDodia.js"></script>
+</body>
+
+</html>

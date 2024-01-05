@@ -5,25 +5,32 @@ var app = new Vue ({
     data: {
         dataTablePedido: {
             headers: [
-                { text: 'Responsável', value: 'responsavel' },
+                { text: 'AÇÕES', value: 'actions' },
+                { text: 'Id', value: 'id' },
+                { text: 'Data de inclusao', value: 'datainclusao' },
+                { text: 'Posto/Grad - Nome de Guerra', value: 'responsavel' },
                 { text: 'Tel/Ramal', value: 'telefone' },
                 { text: 'Local de Partida', value: 'localPartida' },
                 { text: 'Destino', value: 'destino' },
-                // { text: 'Descrição Serviço', value: 'observacoes' },
-                { text: 'Quantidade Passageiros', value: 'passageirosQnt' },
-                { text: 'Motorista Espera', value: 'motoristaEsperar' },
                 { text: 'STATUS', value: 'status' },
-                { text: 'Data Viagem', value: 'saidadate' },
+                { text: 'Data da Viagem', value: 'saidadate' },
+                { text: 'Horário de Saída', value: 'saidahora' },
+                {text: 'Data de retorno', value: 'retornodate'},
+                { text: 'Horário de Retorno', value: 'retornohora' },
+                { text: 'Observações', value: 'observacoes' },
                 { text: 'Motorista', value: 'motorista' },
-                { text: 'Viatura', value: 'viatura' },
-                { text: 'AÇÕES', value: 'actions' }
+                { text: 'Modelo do Veículo', value: 'viatura' },
+                { text: 'Hodômetro Saída', value: 'hodometroSaida' },
+                { text: 'Hodômetro Regresso', value: 'hodometroRegresso' },
+                { text: 'Gerar PDF', value: 'gerarpdf' },
+                { text: 'OM', value: 'om' }
             ], 
             items: [], 
             itemsfiltrados: [], 
             pedidos: {}
             
         },
-        search: '',
+        search: '' ,
         obrigatorio: [
             v => !!v || "Campo Obrigatório",
         ],
@@ -52,15 +59,17 @@ var app = new Vue ({
     }, 
     methods: {
         async getPedidos() {
+           
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
-                await axios.get(`pedidoViatura/todosPedidos/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                await axios.get(`pedidoViatura/pedidosdoDia/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size
                     this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
                     this.pedido = resp.data.content
                     this.dataTablePedido.items = resp.data.content 
                     console.log( this.dataTablePedido.items)
+                    // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
                 }).finally(()=> this.dataTablePedido.loading = false)
 
 
@@ -72,20 +81,13 @@ var app = new Vue ({
             })
 
         },        
-        novo() {
-           this.novoPedido = {}
-            this.novoPedidoDialog = true   
-            this.$refs?.form?.resetValidation()
-            this.modoEdicao = false
-            this.modoVisualizacao = false 
-        },
+       
         async salvar() {
             this.novoPedido.postGraduacao = this.novoPedido.postGraduacao.toUpperCase();
             this.novoPedido.nomeGuerra = this.novoPedido.nomeGuerra.toUpperCase();
             this.novoPedido.localPartida = this.novoPedido.localPartida.toUpperCase();
             this.novoPedido.destino = this.novoPedido.destino.toUpperCase();
             this.novoPedido.dataInclusao = new Date();
-            this.novoPedido.motoristaEsperar = this.novoPedido.motoristaEsperar.toUpperCase(); 
             this.novoPedido.status = "Em Análise";
 
             if (
@@ -138,15 +140,7 @@ var app = new Vue ({
             
 
         },
-        async visualizarPedido(item){
-                this.modoVisualizacao = true;
-                this.modoEdicao = false; 
-                this.novoPedido = structuredClone(item)
-                this.novoPedidoDialog = true;
-                this.activateFormulario = true
-                this.btnLiquidar = false
-                this.titleDialog = "Pedido"
-        }, 
+      
         async excluirPedido(item) {
             Swal.fire({
               title: 'Tem certeza que deseja excluir?',
@@ -176,14 +170,25 @@ var app = new Vue ({
           },
            formatarData(data) {
             const dataObj = new Date(data);
-            const dia = String(dataObj.getDate()).padStart(2, '0');
-            const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0
-            const ano = dataObj.getFullYear();
+            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0
+            const ano = dataObj.getUTCFullYear();
         
             return `${dia}/${mes}/${ano}`;
-          }
-      
+          },
+       
+          
+          formatarNIP(nip) {
+            if (typeof nip !== 'number') {
+              return '';
+            }
+        
+            const nipNumerico = nip.toString().replace(/\D/g, '');
+            return nipNumerico.replace(/(\d{2})(\d{4})(\d{2})/, '$1.$2.$3');
+          },
     }, 
+       
+    
         created(){
 
         } 
