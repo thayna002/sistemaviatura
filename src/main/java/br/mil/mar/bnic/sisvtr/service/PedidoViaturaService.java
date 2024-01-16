@@ -3,6 +3,10 @@ package br.mil.mar.bnic.sisvtr.service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import br.mil.mar.bnic.sisvtr.dto.InfoPedidoViaturaDTO;
 import br.mil.mar.bnic.sisvtr.dto.QtdPedidoViaturaDTO;
+
 import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 import br.mil.mar.bnic.sisvtr.repository.PedidoViaturaRepository;
 
@@ -31,10 +36,15 @@ public class PedidoViaturaService {
         repository.deleteById(id);
     }
 
-    public List<QtdPedidoViaturaDTO> pedidosPorStatusB() {
 
-        return null;
+    public Page<PedidoViatura> searcByOm(String om, Pageable pageable) {
+        LocalDate dataAtual = LocalDate.now();
+       return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual, pageable);
     }
+
+   
+
+
 
     public List<InfoPedidoViaturaDTO> pedidosPorStatus() {
 

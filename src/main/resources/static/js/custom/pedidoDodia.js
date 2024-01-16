@@ -3,27 +3,35 @@ var app = new Vue ({
     el: '#app', 
     vuetify: new Vuetify({}), 
     data: {
-        relPedido: [],
+        pedidoCopy: [], 
+
         dataTablePedido: {
             headers: [
-                { text: 'Responsável', value: 'responsavel' },
+                { text: 'AÇÕES', value: 'actions' },
+                { text: 'Id', value: 'id' },
+                { text: 'Data de inclusao', value: 'datainclusao' },
+                { text: 'Posto/Grad - Nome de Guerra', value: 'responsavel' },
                 { text: 'Tel/Ramal', value: 'telefone' },
                 { text: 'Local de Partida', value: 'localPartida' },
                 { text: 'Destino', value: 'destino' },
-                { text: 'Quantidade Passageiros', value: 'passageirosQnt' },
-                { text: 'Motorista Espera', value: 'motoristaEsperar' },
                 { text: 'STATUS', value: 'status' },
-                { text: 'Data Viagem', value: 'saidadate' },
+                { text: 'Data da Viagem', value: 'saidadate' },
+                { text: 'Horário de Saída', value: 'saidahora' },
+                {text: 'Data de retorno', value: 'retornodate'},
+                { text: 'Horário de Retorno', value: 'retornohora' },
+                { text: 'Observações', value: 'observacoes' },
                 { text: 'Motorista', value: 'motorista' },
-                { text: 'Viatura', value: 'viatura' },
-                { text: 'AÇÕES', value: 'actions' }
+                { text: 'Modelo do Veículo', value: 'viatura' },
+                { text: 'Hodômetro Saída', value: 'hodometroSaida' },
+                { text: 'Hodômetro Regresso', value: 'hodometroRegresso' },
+                { text: 'Gerar PDF', value: 'gerarpdf' },
+                { text: 'OM', value: 'om' }
             ], 
             items: [], 
             itemsfiltrados: [], 
             pedidos: {},
-          
+            
         },
-        search: '',
         obrigatorio: [
             v => !!v || "Campo Obrigatório",
         ],
@@ -35,12 +43,13 @@ var app = new Vue ({
         novoPedidoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
-            itemsPerPage: 10 // Por exemplo, page = 1 e itemsPerPage = 10
-          }, 
+            itemsPerPage: 10, // Por exemplo, page = 1 e itemsPerPage = 10
+            
+        }, 
         itemsPerPage: [10, 20, 30],
+        search: null,
+        item:{},
 
-
-        
     }, 
     mounted(){
         this.getPedidos(), 
@@ -48,37 +57,48 @@ var app = new Vue ({
     }, 
 
     computed: {
-
-    }, 
+       
+        }, 
     watch: {
-        options:{
-            handler(){
-                this.pesquisa()
-            }, 
-            deep: true
+        search(val, newVal) {
+            console.log(val)
+            if (!val) return
+            if (val == newVal) return
+            if (val.length < 2 ) return 
+            this.searchByOm(val)
         }
-
-
+         
     }, 
     methods: {
+        
         async getPedidos() {
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
-                await axios.get(`pedidoViatura/todosPedidos/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                await axios.get(`pedidoViatura/pedidosdoDia/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size
                     this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
                     this.pedido = resp.data.content
                     this.dataTablePedido.items = resp.data.content 
-                    console.log( this.dataTablePedido.items)
+                    // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
                 }).finally(()=> this.dataTablePedido.loading = false)
 
 
         },    
-        pesquisa(item) {
-            this.loading = true
-            this.getPedidos(item)
-          },
+        async searchByOm(val) {
+            let {  page, itemsPerPage} = this.options
+            page = page ? page : 1
+                await axios.get(`pedidoViatura/search/om/${val}/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                    this.dataTablePedido.totalItens = resp.data.totalElements
+                    this.dataTablePedido.itemsPerPage = resp.data.size
+                    this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
+                    this.pedido = resp.data.content
+                    this.dataTablePedido.items = resp.data.content 
+                    // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
+                }).finally(()=> this.dataTablePedido.loading = false)
+
+
+        },
         async getClienteBnic(){
             await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
                 this.clienteBnic = resp.data; 
@@ -86,51 +106,13 @@ var app = new Vue ({
             })
 
         },        
-        novo() {
-           this.novoPedido = {}
-            this.novoPedidoDialog = true   
-            this.$refs?.form?.resetValidation()
-            this.modoEdicao = false
-            this.modoVisualizacao = false 
-        },
-        async getRelPedido() {
-            await axios({
-                url: `pedidoViatura/pedidoPorStatus`,
-                method: 'GET',
-            }).then((resp) => {
-               
-                this.relPedido = resp.data
-                console.log(JSON.stringify(this.relPedido))
-
-                this.$nextTick(async () => {
-                jsreport.renderAsync({
-                    "template": {
-                        "shortid": "H1iN8J7Oa"
-                    },
-                    data: {
-                        relPedido: this.relPedido
-                    }
-                }).then(resp => {
-                    resp.download(`Relatório de Viagens.pdf`)
-                })
-            });
-                
-            }).catch(() => {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Aviso',
-                    confirmButtonColor: "blue",
-                    text: 'Não há dados no período selecionado!',
-                })
-            });
-         },
+       
         async salvar() {
             this.novoPedido.postGraduacao = this.novoPedido.postGraduacao.toUpperCase();
             this.novoPedido.nomeGuerra = this.novoPedido.nomeGuerra.toUpperCase();
             this.novoPedido.localPartida = this.novoPedido.localPartida.toUpperCase();
             this.novoPedido.destino = this.novoPedido.destino.toUpperCase();
             this.novoPedido.dataInclusao = new Date();
-            this.novoPedido.motoristaEsperar = this.novoPedido.motoristaEsperar.toUpperCase(); 
             this.novoPedido.status = "Em Análise";
 
             if (
@@ -181,16 +163,23 @@ var app = new Vue ({
             this.novoPedidoDialog = true;
             this.novoPedido = item;
             
+
         },
-        async visualizarPedido(item){
-                this.modoVisualizacao = true;
-                this.modoEdicao = false; 
-                this.novoPedido = structuredClone(item)
-                this.novoPedidoDialog = true;
-                this.activateFormulario = true
-                this.btnLiquidar = false
-                this.titleDialog = "Pedido"
-        }, 
+        async searchOm() {
+            if (!this.search) {
+              this.dataTablePedido.items = this.pedidoCopy;
+              await this.getPedidos();
+              return ; 
+            }
+          
+            this.dataTablePedido.items = this.pedidoCopy.filter(item => {
+                return (
+                    item.pedido.toLowerCase().includes(this.search.toLowerCase()) 
+                ); 
+
+                });
+    },
+      
         async excluirPedido(item) {
             Swal.fire({
               title: 'Tem certeza que deseja excluir?',
@@ -220,14 +209,25 @@ var app = new Vue ({
           },
            formatarData(data) {
             const dataObj = new Date(data);
-            const dia = String(dataObj.getDate()).padStart(2, '0');
-            const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0
-            const ano = dataObj.getFullYear();
+            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // O mês começa a partir de 0
+            const ano = dataObj.getUTCFullYear();
         
             return `${dia}/${mes}/${ano}`;
-          }
-      
+          },
+       
+          
+          formatarNIP(nip) {
+            if (typeof nip !== 'number') {
+              return '';
+            }
+        
+            const nipNumerico = nip.toString().replace(/\D/g, '');
+            return nipNumerico.replace(/(\d{2})(\d{4})(\d{2})/, '$1.$2.$3');
+          },
     }, 
+       
+    
         created(){
 
         } 

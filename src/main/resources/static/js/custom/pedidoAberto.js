@@ -77,6 +77,7 @@ var app = new Vue ({
                 // console.log(this.listViaturas)
             })
         }, 
+
         async getMotoristas(){
             await axios.get(`motoristas/getMotoristas`).then((resp)=>{
                 this.listMotoristas = resp.data; 

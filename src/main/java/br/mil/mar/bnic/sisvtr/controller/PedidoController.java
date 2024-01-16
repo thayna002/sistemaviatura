@@ -2,7 +2,17 @@ package br.mil.mar.bnic.sisvtr.controller;
 
 
 
+
 import java.util.List;
+
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.tomcat.jni.Local;
+import org.hibernate.annotations.Parameter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +53,7 @@ public class PedidoController {
         return pedidoViaturaRepository.findByStatus("Em Análise", pageable);
     }
 
+
     @PostMapping
     public ResponseEntity<PedidoViatura> save(@RequestBody PedidoViatura pedido){
         return ResponseEntity.ok(service.save(pedido)); 
@@ -54,13 +65,61 @@ public class PedidoController {
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+    public ResponseEntity<PedidoViatura> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @GetMapping("pedidoPorStatus")
     public ResponseEntity<List<InfoPedidoViaturaDTO>> getPedidosPorStatus(){
         return ResponseEntity.ok(service.pedidosPorStatus());
     }   
+
+
+
+    // retorna viagens no dia atual
+    @GetMapping(path = "pedidosdoDia")
+    public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(Pageable pageable) {
+        LocalDate dataAtual = LocalDate.now();
+        Page<PedidoViatura> pedidos = pedidoViaturaRepository.findBySaidaDate(dataAtual, pageable);
+        return ResponseEntity.ok(pedidos);
+    }
+
+    @GetMapping(path = "search/om/{om}")
+    public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searcByOm(om, pageable);
+        return ResponseEntity.ok(pedidos);
+    }
+
+
+    
+
+    // filtra por dia de viagem 
+    // @GetMapping(path = "pedidoDtViagem")
+    // public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@RequestParam("saidaDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate saidaDate,
+    //         Pageable pageable) {
+    //     Page<PedidoViatura> pedidos = pedidoViaturaRepository.findBySaidaDate(saidaDate, pageable);
+    //     return ResponseEntity.ok(pedidos);
+    // }
+
+
+  
+    
+
+    //  @GetMapping("/clienteBnic")
+    // public ClienteDTO cliente() {
+    //     RestTemplate restTemplate = new RestTemplate();
+        
+    //     try {
+    //         ResponseEntity<ClienteDTO> resp = restTemplate.getForEntity("http://viacep.com.br/ws/21020170/json", ClienteDTO.class);
+    //         return resp.getBody();
+    //     } catch (Exception e) {
+    //         // Trate a exceção de forma apropriada (por exemplo, registre-a ou retorne uma mensagem de erro)
+    //         e.printStackTrace();
+    //         return null; // Ou retorne um ClienteDTO vazio ou com valores padrão, dependendo do seu caso.
+    //     }
+    // }
+
+    
+
 }

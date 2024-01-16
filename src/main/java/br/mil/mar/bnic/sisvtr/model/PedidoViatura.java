@@ -91,6 +91,7 @@ public class PedidoViatura {
     @Column(name = "local_de_partida")
     private String localPartida; 
 
+        
     @Column(name = "retorno_date")
     private LocalDate retornoDate; 
 
