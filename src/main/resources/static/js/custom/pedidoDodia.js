@@ -52,18 +52,21 @@ var app = new Vue ({
 
     }, 
     mounted(){
-        this.getPedidos(), 
-        this.getClienteBnic()
+        // this.getPedidos(), 
+        // this.getClienteBnic()
     }, 
 
     computed: {
        
         }, 
     watch: {
+       
         search(val, newVal) {
-            console.log(val)
-            if (!val) return
+            if(val=='')return 
+            this.getPedidos()    
+            if (!val) return 
             if (val == newVal) return
+            this.searchByOm(val)
             if (val.length < 2 ) return 
             this.searchByOm(val)
         }
@@ -88,7 +91,8 @@ var app = new Vue ({
         async searchByOm(val) {
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
-                await axios.get(`pedidoViatura/search/om/${val}/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                await axios.get(`pedidoViatura/search/om/${val}/?page=${page - 1}&size=${itemsPerPage}`)
+                .then( (resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size
                     this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
@@ -99,6 +103,7 @@ var app = new Vue ({
 
 
         },
+     
         async getClienteBnic(){
             await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
                 this.clienteBnic = resp.data; 
@@ -229,7 +234,8 @@ var app = new Vue ({
        
     
         created(){
-
+            this.getPedidos();
+            this.getClienteBnic();
         } 
 
     });
