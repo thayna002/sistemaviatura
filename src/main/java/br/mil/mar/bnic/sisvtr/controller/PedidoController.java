@@ -76,6 +76,11 @@ public class PedidoController {
         return ResponseEntity.ok(pedidos);
     }
 
+    @GetMapping(path = "search/om/{om}")
+    public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searcByOm(om, pageable);
+        return ResponseEntity.ok(pedidos);
+    }
+
 
     
 

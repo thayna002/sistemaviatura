@@ -3,6 +3,8 @@ package br.mil.mar.bnic.sisvtr.service;
 
 
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,11 @@ public class PedidoViaturaService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public Page<PedidoViatura> searcByOm(String om, Pageable pageable) {
+        LocalDate dataAtual = LocalDate.now();
+       return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual, pageable);
     }
 
    

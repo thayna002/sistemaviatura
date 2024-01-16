@@ -3,6 +3,7 @@ package br.mil.mar.bnic.sisvtr.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
@@ -18,6 +19,10 @@ public interface PedidoViaturaRepository extends JpaRepository<PedidoViatura, Lo
 
     Page<PedidoViatura> findByStatus(String status, Pageable pageable);
     
+
     Page<PedidoViatura> findBySaidaDate(LocalDate saidaDate, Pageable pageable);
+
+    Page<PedidoViatura> findByOmContainingIgnoreCaseAndSaidaDate(String om, LocalDate saidaDate, Pageable pageable);
+    
  
 }

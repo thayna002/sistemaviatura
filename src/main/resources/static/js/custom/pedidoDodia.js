@@ -3,6 +3,8 @@ var app = new Vue ({
     el: '#app', 
     vuetify: new Vuetify({}), 
     data: {
+        pedidoCopy: [], 
+
         dataTablePedido: {
             headers: [
                 { text: 'AÇÕES', value: 'actions' },
@@ -27,10 +29,9 @@ var app = new Vue ({
             ], 
             items: [], 
             itemsfiltrados: [], 
-            pedidos: {}
+            pedidos: {},
             
         },
-        search: '' ,
         obrigatorio: [
             v => !!v || "Campo Obrigatório",
         ],
@@ -42,9 +43,13 @@ var app = new Vue ({
         novoPedidoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
-            itemsPerPage: 10 // Por exemplo, page = 1 e itemsPerPage = 10
-          }, 
-          itemsPerPage: [10, 20, 30]
+            itemsPerPage: 10, // Por exemplo, page = 1 e itemsPerPage = 10
+            
+        }, 
+        itemsPerPage: [10, 20, 30],
+        search: null,
+        item:{},
+
     }, 
     mounted(){
         this.getPedidos(), 
@@ -52,14 +57,21 @@ var app = new Vue ({
     }, 
 
     computed: {
-
-    }, 
+       
+        }, 
     watch: {
+        search(val, newVal) {
+            console.log(val)
+            if (!val) return
+            if (val == newVal) return
+            if (val.length < 2 ) return 
+            this.searchByOm(val)
+        }
          
     }, 
     methods: {
+        
         async getPedidos() {
-           
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
                 await axios.get(`pedidoViatura/pedidosdoDia/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
@@ -68,12 +80,25 @@ var app = new Vue ({
                     this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
                     this.pedido = resp.data.content
                     this.dataTablePedido.items = resp.data.content 
-                    console.log( this.dataTablePedido.items)
                     // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
                 }).finally(()=> this.dataTablePedido.loading = false)
 
 
         },    
+        async searchByOm(val) {
+            let {  page, itemsPerPage} = this.options
+            page = page ? page : 1
+                await axios.get(`pedidoViatura/search/om/${val}/?page=${page - 1}&size=${itemsPerPage}`).then((resp) => {
+                    this.dataTablePedido.totalItens = resp.data.totalElements
+                    this.dataTablePedido.itemsPerPage = resp.data.size
+                    this.dataTablePedido.dataTablePage = resp.data.pageable.pageNumber +1
+                    this.pedido = resp.data.content
+                    this.dataTablePedido.items = resp.data.content 
+                    // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
+                }).finally(()=> this.dataTablePedido.loading = false)
+
+
+        },
         async getClienteBnic(){
             await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
                 this.clienteBnic = resp.data; 
@@ -140,6 +165,20 @@ var app = new Vue ({
             
 
         },
+        async searchOm() {
+            if (!this.search) {
+              this.dataTablePedido.items = this.pedidoCopy;
+              await this.getPedidos();
+              return ; 
+            }
+          
+            this.dataTablePedido.items = this.pedidoCopy.filter(item => {
+                return (
+                    item.pedido.toLowerCase().includes(this.search.toLowerCase()) 
+                ); 
+
+                });
+    },
       
         async excluirPedido(item) {
             Swal.fire({

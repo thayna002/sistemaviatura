@@ -1,17 +1,22 @@
 <head th:replace="common/header.html::header"></head>
 <div th:replace="common/drawer.html::drawer"></div>
-<v-main id="app">
+<!-- <v-main id="app"> -->
     <v-container fluid> 
-        <v-data-table :headers="dataTablePedido.headers" :items="dataTablePedido.items"
-     class="elevation-1" :footer-props="dataTablePedido.footerProps" :server-items-length="dataTablePedido.totalItens" :items-per-page="dataTablePedido.itemsPerPage"
-    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
+        <v-data-table :headers="dataTablePedido.headers" 
+        :items="dataTablePedido.items"  
+        :item-key="item.id"
+        :options.sync="options"
+        class="elevation-1" :footer-props="dataTablePedido.footerProps" 
+        :server-items-length="dataTablePedido.totalItens" 
+        :items-per-page="dataTablePedido.itemsPerPage"
+        no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage" 
      >
             <template v-slot:top>
                 <v-toolbar flat>
                     <v-toolbar-title>Pedido do Dia</v-toolbar-title>
                     <v-divider class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>
-                    <v-text-field dense hide-details v-model="search" label="Pesquisa"></v-text-field>
+                    <v-text-field   v-model="search" label="Pesquisa" dense hide-details></v-text-field>
                     <v-spacer></v-spacer>
                    
                 </v-toolbar>
