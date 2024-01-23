@@ -33,7 +33,7 @@ public class MotoristaController {
         );
     }
 
-     @GetMapping("todosMotoristas")
+    @GetMapping("todosMotoristas")
     public ResponseEntity<Page<Motoristas>> findAll(Pageable pageable){
         return ResponseEntity.ok(service.findAll(pageable));
     }

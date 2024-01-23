@@ -23,16 +23,15 @@ public class IndexController {
         return "pages/pedidoAberto";
     }
 
-    @RequestMapping("TfrmMotorista")
+    @RequestMapping("TFrmMotorista")
     public String motorista() {
         return "pages/motorista";
     }
 
-    @RequestMapping("TfrmPedidoDoDia")
+    @RequestMapping("TFrmPedidoDoDia")
     public String pedidododia() {
         return "pages/pedidoDodia";
     }
-
 
     
 }

@@ -7,6 +7,7 @@ var app = new Vue ({
 
         dataTablePedido: {
             headers: [
+              
                 { text: 'AÇÕES', value: 'actions' },
                 { text: 'Id', value: 'id' },
                 { text: 'Data de inclusao', value: 'datainclusao' },
@@ -17,7 +18,7 @@ var app = new Vue ({
                 { text: 'STATUS', value: 'status' },
                 { text: 'Data da Viagem', value: 'saidadate' },
                 { text: 'Horário de Saída', value: 'saidahora' },
-                {text: 'Data de retorno', value: 'retornodate'},
+                { text: 'Data de retorno', value: 'retornodate'},
                 { text: 'Horário de Retorno', value: 'retornohora' },
                 { text: 'Observações', value: 'observacoes' },
                 { text: 'Motorista', value: 'motorista' },
@@ -43,7 +44,7 @@ var app = new Vue ({
         novoPedidoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
-            itemsPerPage: 10, // Por exemplo, page = 1 e itemsPerPage = 10
+            itemsPerPage: 10// Por exemplo, page = 1 e itemsPerPage = 10
             
         }, 
         itemsPerPage: [10, 20, 30],
@@ -62,14 +63,25 @@ var app = new Vue ({
     watch: {
        
         search(val, newVal) {
-            if(val=='')return 
-            this.getPedidos()    
-            if (!val) return 
+            if(val==' '||!val) 
+            return  
+            this.getPedidos()
+
+            // if (!val) return 
+            // this.getPedidos()
             if (val == newVal) return
             this.searchByOm(val)
             if (val.length < 2 ) return 
             this.searchByOm(val)
+        }, 
+        options:{
+            handler(){
+                this.pesquisa()
+            }, 
+            deep: true
         }
+
+         
          
     }, 
     methods: {
@@ -88,6 +100,11 @@ var app = new Vue ({
 
 
         },    
+        pesquisa(item) {
+            this.loading = true
+            this.getPedidos(item)
+          },  
+
         async searchByOm(val) {
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
@@ -103,6 +120,7 @@ var app = new Vue ({
 
 
         },
+        
      
         async getClienteBnic(){
             await axios.get(`http://10.1.32.30/FATURA/clientesbnic`).then((resp)=>{
@@ -111,6 +129,7 @@ var app = new Vue ({
             })
 
         },        
+        
        
         async salvar() {
             this.novoPedido.postGraduacao = this.novoPedido.postGraduacao.toUpperCase();

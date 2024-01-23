@@ -4,7 +4,8 @@
     <v-container fluid> 
         <v-data-table :headers="dataTablePedido.headers" :items="dataTablePedido.items"
      class="elevation-1" :footer-props="dataTablePedido.footerProps" :server-items-length="dataTablePedido.totalItens" :items-per-page="dataTablePedido.itemsPerPage"
-    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
+    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"      :options.sync="options"
+
      >
             <template v-slot:top>
                 <v-toolbar flat>
