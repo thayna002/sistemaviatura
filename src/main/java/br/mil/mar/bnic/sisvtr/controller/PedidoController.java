@@ -43,6 +43,11 @@ public class PedidoController {
     public ResponseEntity<Page<PedidoViatura>> findAll(Pageable pageable){
         return ResponseEntity.ok(service.findAll(pageable));
     }
+    // filtro search
+     @GetMapping(path = "search/{om}")
+    public ResponseEntity<Page<PedidoViatura>> findAll(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searchByOm(om, pageable);
+        return ResponseEntity.ok(pedidos);
+    }
 
     @GetMapping("pedidoAberto")
     public Page<PedidoViatura> getPedidosEmAnalise(Pageable pageable) {
@@ -75,11 +80,12 @@ public class PedidoController {
         Page<PedidoViatura> pedidos = pedidoViaturaRepository.findBySaidaDate(dataAtual, pageable);
         return ResponseEntity.ok(pedidos);
     }
-
+// filtro search para lista Pedido Diaria
     @GetMapping(path = "search/om/{om}")
     public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searcByOm(om, pageable);
         return ResponseEntity.ok(pedidos);
     }
+   
 
 
     

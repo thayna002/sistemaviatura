@@ -44,7 +44,7 @@ var app = new Vue ({
         novoPedidoDialog: false, 
         options: {  // Instanciando a variável options
             page: 1,  // Defina os valores iniciais desejados para page e itemsPerPage
-            itemsPerPage: 10// Por exemplo, page = 1 e itemsPerPage = 10
+            itemsPerPage: 10 // Por exemplo, page = 1 e itemsPerPage = 10
             
         }, 
         itemsPerPage: [10, 20, 30],
@@ -73,7 +73,8 @@ var app = new Vue ({
             this.searchByOm(val)
             if (val.length < 2 ) return 
             this.searchByOm(val)
-        }, 
+        },
+         
         options:{
             handler(){
                 this.pesquisa()

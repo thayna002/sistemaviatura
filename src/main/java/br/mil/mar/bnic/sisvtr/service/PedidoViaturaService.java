@@ -29,9 +29,13 @@ public class PedidoViaturaService {
         repository.deleteById(id);
     }
 
+    // retorna om's em lista diaria
     public Page<PedidoViatura> searcByOm(String om, Pageable pageable) {
         LocalDate dataAtual = LocalDate.now();
        return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual, pageable);
+    }
+    public Page<PedidoViatura> searchByOm(String om, Pageable pageable) {
+       return repository.findByOm(om, pageable);
     }
 
    
