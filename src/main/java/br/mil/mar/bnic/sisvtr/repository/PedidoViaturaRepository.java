@@ -29,11 +29,12 @@ public interface PedidoViaturaRepository extends JpaRepository<PedidoViatura, Lo
     Page<PedidoViatura> findBySaidaDate(LocalDate saidaDate, Pageable pageable);
 
     Page<PedidoViatura> findByOmContainingIgnoreCaseAndSaidaDate(String om, LocalDate saidaDate, Pageable pageable);
-
+    Page<PedidoViatura> findByOm(String om, Pageable pageable);
 }
 
+        
     
 
-    
+
  
 

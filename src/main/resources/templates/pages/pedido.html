@@ -3,11 +3,9 @@
 <v-main id="app">
     <v-container fluid> 
         <v-data-table :headers="dataTablePedido.headers" :items="dataTablePedido.items"
-     class="elevation-1" :footer-props="dataTablePedido.footerProps" 
-     :server-items-length="dataTablePedido.totalItens" 
-     :items-per-page="dataTablePedido.itemsPerPage"
-     :options.sync="options"
-    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"
+     class="elevation-1" :footer-props="dataTablePedido.footerProps" :server-items-length="dataTablePedido.totalItens" :items-per-page="dataTablePedido.itemsPerPage"
+    no-data-text="Não ha dados" :page.sync="dataTablePedido.dataTablePage"      :options.sync="options" item-key="item.om"
+
      >
             <template v-slot:top>
                 <v-toolbar flat>
@@ -54,6 +52,9 @@
               </template>
               <template v-slot:item.motorista="{ item }">
                 {{ item.motoristas ? (item.motoristas.graduacaoMotorista + ' ' + item.motoristas.nomeGuerraMotorista) : ' ' }}
+              </template>
+              <template v-slot:item.om="{item}">
+                {{ item.om }}
               </template>
               <template v-slot:item.responsavel="{item}">
                 {{ item.postGraduacao + ' '+ item.nomeGuerra}}

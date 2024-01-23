@@ -27,6 +27,11 @@ public class PedidoViaturaService {
     public Page<PedidoViatura> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+    
+    // filtro search
+     public Page<PedidoViatura> findByOm(String om, Pageable pageable) {
+       return repository.findByOm(om, pageable);
+    }
 
     public PedidoViatura save(PedidoViatura pedido) {
         return repository.save(pedido);
@@ -37,11 +42,12 @@ public class PedidoViaturaService {
     }
 
 
+    // retorna om's em lista diaria
+
     public Page<PedidoViatura> searcByOm(String om, Pageable pageable) {
         LocalDate dataAtual = LocalDate.now();
        return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual, pageable);
     }
-
    
 
 
