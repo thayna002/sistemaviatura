@@ -49,7 +49,8 @@ public class PedidoController {
     }
     // filtro search
      @GetMapping(path = "search/{om}")
-    public ResponseEntity<Page<PedidoViatura>> findAll(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searchByOm(om, pageable);
+    public ResponseEntity<Page<PedidoViatura>> findAll(@PathVariable String om, Pageable pageable) { 
+        Page<PedidoViatura> pedidos = service.findByOm(om, pageable);
         return ResponseEntity.ok(pedidos);
     }
 
@@ -92,7 +93,8 @@ public class PedidoController {
     }
 // filtro search para lista Pedido Diaria
     @GetMapping(path = "search/om/{om}")
-    public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@PathVariable String om, Pageable pageable) {        Page<PedidoViatura> pedidos = service.searcByOm(om, pageable);
+    public ResponseEntity<Page<PedidoViatura>> listaPedidoDiaria(@PathVariable String om, Pageable pageable) {      
+          Page<PedidoViatura> pedidos = service.searcByOm(om, pageable);
         return ResponseEntity.ok(pedidos);
     }
    
