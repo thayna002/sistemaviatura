@@ -9,6 +9,7 @@ var app = new Vue ({
             headers: [
               
                 { text: 'AÇÕES', value: 'actions' },
+                { text: 'OM', value: 'om' },
                 { text: 'Id', value: 'id' },
                 { text: 'Data de inclusao', value: 'datainclusao' },
                 { text: 'Posto/Grad - Nome de Guerra', value: 'responsavel' },
@@ -26,7 +27,6 @@ var app = new Vue ({
                 { text: 'Hodômetro Saída', value: 'hodometroSaida' },
                 { text: 'Hodômetro Regresso', value: 'hodometroRegresso' },
                 { text: 'Gerar PDF', value: 'gerarpdf' },
-                { text: 'OM', value: 'om' }
             ], 
             items: [], 
             itemsfiltrados: [], 
@@ -62,16 +62,8 @@ var app = new Vue ({
         }, 
     watch: {
        
-        search(val, newVal) {
-            if(val==' '||!val) 
-            return  
-            this.getPedidos()
-
-            // if (!val) return 
-            // this.getPedidos()
-            if (val == newVal) return
-            this.searchByOm(val)
-            if (val.length < 2 ) return 
+        search(val) {
+           
             this.searchByOm(val)
         },
          
@@ -109,7 +101,7 @@ var app = new Vue ({
         async searchByOm(val) {
             let {  page, itemsPerPage} = this.options
             page = page ? page : 1
-                await axios.get(`pedidoViatura/search/om/${val}/?page=${page - 1}&size=${itemsPerPage}`)
+                await axios.get(`pedidoViatura/pesquisa/?om=${val}&page=${page - 1}&size=${itemsPerPage}`)
                 .then( (resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size

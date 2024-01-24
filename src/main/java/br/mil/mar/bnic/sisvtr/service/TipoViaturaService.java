@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 import br.mil.mar.bnic.sisvtr.model.TipoViatura;
 import br.mil.mar.bnic.sisvtr.repository.TipoViaturaRespository;
 
@@ -23,5 +24,12 @@ public class TipoViaturaService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public Page<TipoViatura> searchByTipo(String tipo, Pageable pageable) {
+        if (tipo==null || tipo.equals("")){
+            return repository.findAll(pageable);
+        }
+       return repository.findByTipo(tipo, pageable);
     }
 }
