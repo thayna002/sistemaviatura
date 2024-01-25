@@ -12,6 +12,7 @@ var app = new Vue({
             ],
             items: []
         },
+        search:'',
         items: [],
         totalItens: 0,
         itemsPerPage: 10,
@@ -44,7 +45,23 @@ var app = new Vue({
     watch: {
         async options(newValue) {
             await this.getTipos()
-        }
+        },
+
+            search(val, newVal) {
+                   
+                // if (!val && val !=newVal)return
+                // this.getipos()
+    
+                // if (!val) return 
+                // this.getPedidos()
+                // if (val == newVal) return
+                this.searchByTipo(val)
+                // if (val.length < 2) return
+                // this.searchByTipo(val)
+
+            },
+            
+    
     },
     methods: {
         async getTipos() {
@@ -60,6 +77,21 @@ var app = new Vue({
                 this.dataTableTipo.items = resp.data.content
                 console.log(this.dataTableTipo.items)
             }).finally(() => this.dataTableTipo.loading = false)
+        },
+        async searchByTipo(val) {
+            let { page, itemsPerPage } = this.options
+            page = page ? page : 1
+            await axios.get(`tipoViatura/search/?tipo=${val}&page=${page - 1}&size=${itemsPerPage}`)
+                .then((resp) => {
+                    this.dataTableTipo.totalItens = resp.data.totalElements
+                    this.dataTableTipo.itemsPerPage = resp.data.size
+                    this.dataTableTipo.dataTablePage = resp.data.pageable.pageNumber + 1
+                    this.tipo = resp.data.content
+                    this.dataTableTipo.items = resp.data.content
+                    // console.log((new Intl.DateTimeFormat('pt-BR').format(this.pedido.saidaDate)))
+                }).finally(() => this.dataTableTipo.loading = false)
+
+
         },
         novo() {
             this.novoTipo = {}

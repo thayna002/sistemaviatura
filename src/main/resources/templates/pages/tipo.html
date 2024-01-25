@@ -13,7 +13,7 @@
                     <v-toolbar-title>Tipos Viatura</v-toolbar-title>
                     <v-divider class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>
-                    <v-text-field dense hide-details  label="Pesquisa"></v-text-field>
+                    <v-text-field dense hide-details v-model="search" label="Pesquisa"></v-text-field>
                     <v-spacer></v-spacer>
                     <v-btn color="primary" dark class="mb-2" @click="novo">
                         Novo

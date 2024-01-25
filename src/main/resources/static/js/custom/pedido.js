@@ -6,7 +6,7 @@ var app = new Vue({
         relPedido: [],
         dataTablePedido: {
             headers: [
-                { text: 'om ', value: 'om' },
+                { text: 'OM', value: 'om' },
                 { text: 'Responsável', value: 'responsavel' },
                 { text: 'Tel/Ramal', value: 'telefone' },
                 { text: 'Local de Partida', value: 'localPartida' },
@@ -50,16 +50,10 @@ var app = new Vue({
     },
     watch: {
 
-        search(val, newVal) {
-               
-            if (!val)return
-            this.getPedidos()
-
-            // if (!val) return 
-            // this.getPedidos()
-            if (val == newVal) return
+        search(val) {
+           
             this.searchByOm(val)
-            if (val.length < 1) return
+       
             
         },
         options: {
@@ -89,7 +83,7 @@ var app = new Vue({
         async searchByOm(val) {
             let { page, itemsPerPage } = this.options
             page = page ? page : 1
-            await axios.get(`pedidoViatura/search/${val}/?page=${page - 1}&size=${itemsPerPage}`)
+            await axios.get(`pedidoViatura/search/?om=${val}&page=${page - 1}&size=${itemsPerPage}`)
                 .then((resp) => {
                     this.dataTablePedido.totalItens = resp.data.totalElements
                     this.dataTablePedido.itemsPerPage = resp.data.size

@@ -12,26 +12,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.mil.mar.bnic.sisvtr.model.PedidoViatura;
 import br.mil.mar.bnic.sisvtr.model.TipoViatura;
 import br.mil.mar.bnic.sisvtr.service.TipoViaturaService;
 
 @RestController
-@RequestMapping(path="/tipoViatura")
+@RequestMapping(path = "/tipoViatura")
 public class TipoController {
 
     @Autowired
-    private TipoViaturaService service; 
+    private TipoViaturaService service;
 
     @GetMapping
-    public ResponseEntity<Page<TipoViatura>> findAll(Pageable pageable){
-            return ResponseEntity.ok(service.findAll(pageable));
+    public ResponseEntity<Page<TipoViatura>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(service.findAll(pageable));
+    }
+
+    @GetMapping(path = "search")
+    public ResponseEntity<Page<TipoViatura>> findAll(@RequestParam(required = false) String tipo, Pageable pageable) {
+        Page<TipoViatura> pedidos = service.searchByTipo(tipo, pageable);
+        return ResponseEntity.ok(pedidos);
     }
 
     @PostMapping
-    public ResponseEntity<TipoViatura> save(@RequestBody TipoViatura tipo){
-        return ResponseEntity.ok(service.save(tipo)); 
+    public ResponseEntity<TipoViatura> save(@RequestBody TipoViatura tipo) {
+        return ResponseEntity.ok(service.save(tipo));
     }
 
     @DeleteMapping(path = "{id}")
@@ -41,10 +49,8 @@ public class TipoController {
     }
 
     @PutMapping
-    public ResponseEntity<TipoViatura> put(@RequestBody TipoViatura tipo){
+    public ResponseEntity<TipoViatura> put(@RequestBody TipoViatura tipo) {
         return ResponseEntity.ok(service.save(tipo));
     }
 
-
-    
 }

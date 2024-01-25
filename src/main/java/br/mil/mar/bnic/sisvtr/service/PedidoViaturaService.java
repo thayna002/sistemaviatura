@@ -46,8 +46,20 @@ public class PedidoViaturaService {
 
     public Page<PedidoViatura> searcByOm(String om, Pageable pageable) {
         LocalDate dataAtual = LocalDate.now();
+          if (om==null || om.equals("")){
+            return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual,pageable);
+        }
        return repository.findByOmContainingIgnoreCaseAndSaidaDate(om,dataAtual, pageable);
     }
+
+    //retorna om's em lista
+    public Page<PedidoViatura> searchByOm(String om, Pageable pageable) {
+        if (om==null || om.equals("")){
+            return repository.findAll(pageable);
+        }
+        return repository.findByOm(om, pageable);
+    }
+
    
 
 
