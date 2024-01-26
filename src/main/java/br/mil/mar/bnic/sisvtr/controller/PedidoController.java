@@ -114,5 +114,10 @@ public class PedidoController {
     // dependendo do seu caso.
     // }
     // }
+    @GetMapping("pedidoPorStatus")
+    public ResponseEntity<List<InfoPedidoViaturaDTO>> getPedidosPorStatus(){
+        return ResponseEntity.ok(service.pedidosPorStatus());
+    }
+
 
 }
